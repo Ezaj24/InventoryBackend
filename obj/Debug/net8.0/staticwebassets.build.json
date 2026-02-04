@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "juyYbHBRSaBW5Y/LYeYeWGu/lqewCZpPuHbIGx2GOFE=",
+  "Source": "InventoryCore.Api",
+  "BasePath": "_content/InventoryCore.Api",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
