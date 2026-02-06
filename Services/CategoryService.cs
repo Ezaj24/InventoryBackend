@@ -1,26 +1,32 @@
-using InventoryCore.Api.Dtos.Categories;
+using InventoryCore.Api.Data;
 using InventoryCore.Api.Models;
+using InventoryCore.Api.Dtos;
+using InventoryCore.Api.Dtos.Categories;
 using InventoryCore.Api.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace InventoryCore.Api.Services;
 
 public class CategoryService : ICategoryService
 {
-    // This is temporary storage (in-memory)
-    private static readonly List<Category> _categories = new();
-    private static int _nextId = 1;
+    private readonly AppDbContext _context;
 
-    public CategoryResponseDto Create(CreateCategoryDto dto)
+    public CategoryService(AppDbContext context)
+    {
+        _context = context;
+    }
+
+    public async Task<CategoryResponseDto> CreateAsync(CreateCategoryDto dto)
     {
         var category = new Category
         {
-            Id = _nextId++,
             Name = dto.Name,
             Description = dto.Description,
             CreatedAt = DateTime.UtcNow
         };
 
-        _categories.Add(category);
+        _context.Categories.Add(category);
+        await _context.SaveChangesAsync();
 
         return new CategoryResponseDto
         {
@@ -31,9 +37,9 @@ public class CategoryService : ICategoryService
         };
     }
 
-    public List<CategoryResponseDto> GetAll()
+    public async Task<List<CategoryResponseDto>> GetAllAsync()
     {
-        return _categories
+        return await _context.Categories
             .Select(c => new CategoryResponseDto
             {
                 Id = c.Id,
@@ -41,12 +47,12 @@ public class CategoryService : ICategoryService
                 Description = c.Description,
                 CreatedAt = c.CreatedAt
             })
-            .ToList();
+            .ToListAsync();
     }
 
-    public CategoryResponseDto? GetById(int id)
+    public async Task<CategoryResponseDto?> GetByIdAsync(int id)
     {
-        var category = _categories.FirstOrDefault(c => c.Id == id);
+        var category = await _context.Categories.FindAsync(id);
 
         if (category == null)
             return null;
@@ -58,5 +64,40 @@ public class CategoryService : ICategoryService
             Description = category.Description,
             CreatedAt = category.CreatedAt
         };
+    }
+
+    public async Task<CategoryResponseDto?> UpdateAsync(int id, CreateCategoryDto dto)
+    {
+        var category = await _context.Categories
+            .FirstOrDefaultAsync(c => c.Id == id);
+
+        if (category == null)
+            return null;
+
+        category.Name = dto.Name;
+        category.Description = dto.Description;
+
+        await _context.SaveChangesAsync();
+
+        return new CategoryResponseDto
+        {
+            Id = category.Id,
+            Name = category.Name,
+            Description = category.Description,
+            CreatedAt = category.CreatedAt
+        };
+    }
+
+    public async Task<bool> DeleteAsync(int id)
+    {
+        var category = await _context
+            .Categories.FirstOrDefaultAsync(c => c.Id == id);
+        
+        if(category == null)
+            return false;
+        
+        _context.Categories.Remove(category);
+        await _context.SaveChangesAsync();
+        return true;
     }
 }

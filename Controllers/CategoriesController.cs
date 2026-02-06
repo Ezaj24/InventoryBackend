@@ -10,33 +10,57 @@ namespace InventoryCore.Api.Controllers;
 public class CategoriesController : ControllerBase
 {
     private readonly ICategoryService _categoryService;
-    
-    public CategoriesController(ICategoryService  categoryService)
+
+    public CategoriesController(ICategoryService categoryService)
     {
         _categoryService = categoryService;
     }
 
     [HttpPost]
-    public ActionResult<CategoryResponseDto> Create(CreateCategoryDto dto)
+    public async Task<ActionResult<CategoryResponseDto>> Create(CreateCategoryDto dto)
     {
-        var result = _categoryService.Create(dto);
-        return Ok(result);
+        var result = await _categoryService.CreateAsync(dto);
+
+        return CreatedAtAction(nameof(Get), new { id = result.Id }, result);
     }
 
     [HttpGet]
-    public ActionResult<List<CategoryResponseDto>> GetAll()
+    public async Task<ActionResult<List<CategoryResponseDto>>> GetAll()
     {
-        var result = _categoryService.GetAll();
+        var result = await _categoryService.GetAllAsync();
         return Ok(result);
     }
 
     [HttpGet("{id}")]
-    public ActionResult<CategoryResponseDto> GetById(int id)
+    public async Task<ActionResult<CategoryResponseDto>> Get(int id)
     {
-        var result = _categoryService.GetById(id);
-        if(result == null)
+        var result = await _categoryService.GetByIdAsync(id);
+
+        if (result == null)
+            return NotFound();
+
+        return Ok(result);
+    }
+
+    [HttpPut("{id}")]
+    public async Task<ActionResult<CategoryResponseDto>> Update(int id, CreateCategoryDto dto)
+    {
+        var result = await _categoryService.UpdateAsync(id, dto);
+
+        if (result == null)
             return NotFound();
         
         return Ok(result);
+
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> Delete(int id)
+    {
+        var deleted = await _categoryService.DeleteAsync(id);
+        if (!deleted)
+            return NotFound();
+        
+        return Ok();
     }
 }
