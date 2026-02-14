@@ -36,8 +36,8 @@ public class CategoryService : ICategoryService
             CreatedAt = category.CreatedAt
         };
     }
-
-    public async Task<List<CategoryResponseDto>> GetAllAsync()
+    
+    public async Task<IEnumerable<CategoryResponseDto>> GetAllAsync()
     {
         return await _context.Categories
             .Select(c => new CategoryResponseDto
