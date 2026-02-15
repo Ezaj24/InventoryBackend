@@ -50,19 +50,32 @@ public class ProductService : IProductService
         
     }
 
-    public async Task<IEnumerable<ProductResponseDto>> GetAllAsync()
+    public async Task<IEnumerable<ProductResponseDto>> GetAllAsync(
+        int page,
+        int pageSize,
+        int? categoryId)
     {
-        return  await _context.Products
-            .Select(x => new ProductResponseDto
-            {
-                Id = x.Id,
-                Name = x.Name,
-                CategoryId = x.CategoryId,
-                Price = x.Price,
-                Quantity = x.Quantity,
-                CreatedAt = x.CreatedAt,
-                CategoryName = x.Category.Name
+        var query = _context.Products.AsQueryable();
 
+        if (categoryId.HasValue)
+        {
+            query = query.Where(x => x.CategoryId == categoryId.Value);
+        }
+        
+        var skip = (page - 1) *  pageSize;
+        
+        return await query
+            .Skip(skip)
+            .Take(pageSize)
+            .Select(p => new ProductResponseDto
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Price= p.Price, 
+                Quantity = p.Quantity,
+                CategoryId = p.CategoryId,
+                CategoryName = p.Category.Name,
+                CreatedAt = p.CreatedAt
             })
             .ToListAsync();
     }

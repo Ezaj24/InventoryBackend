@@ -6,8 +6,12 @@ namespace InventoryCore.Api.Services.Interfaces;
 public interface IProductService
 {
     Task<ProductResponseDto> CreateAsync(CreateProductDto dto);
+
+    Task<IEnumerable<ProductResponseDto>> GetAllAsync(
+        int page,
+        int pageSize,
+        int? categoryId);
     
-    Task<IEnumerable<ProductResponseDto>> GetAllAsync();
     
     Task<ProductResponseDto?> GetByIdAsync(int id);
     
