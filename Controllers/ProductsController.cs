@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using InventoryCore.Api.Services.Interfaces;
 using InventoryCore.Api.Dtos.Products;
+using Microsoft.Extensions.Logging;
 
 namespace InventoryCore.Api.Controllers;
 
@@ -10,20 +11,23 @@ namespace InventoryCore.Api.Controllers;
 public class ProductsController : ControllerBase
 {
     private readonly IProductService _productService;
+    private readonly ILogger<ProductsController> _logger;
 
-    public ProductsController(IProductService productService)
+    public ProductsController(IProductService productService, ILogger<ProductsController> logger)
     {
         _productService = productService;
+        _logger = logger;
     }
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<ProductResponseDto>>> GetAll(
          int page = 1,
          int pageSize = 5,
-         int? categoryId = null)
+         int? categoryId = null,
+         string? sortBy = null)
     {
-       var product = await _productService.GetAllAsync(page, pageSize, categoryId);
-       return Ok(product);
+         return Ok(await _productService.GetAllAsync(page, pageSize, categoryId, sortBy));
+       
     }
 
     [HttpGet("{id}")]
@@ -43,14 +47,15 @@ public class ProductsController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<ProductResponseDto>> Create(CreateProductDto dto)
     {
-        var product = await _productService.CreateAsync(dto);
+        var result = await _productService.CreateAsync(dto);
 
-        if (product == null)
+        if (result == null)
         {
-            return NotFound("Category dosent exist");
+            return BadRequest("Invalid Category");
         }
 
-        return CreatedAtAction(nameof(GetById), new { id = product.Id }, product);
+        return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
+        _logger.LogInformation("Product created : {ProductName}", result.Name);
 
     }
 
@@ -60,7 +65,7 @@ public class ProductsController : ControllerBase
         var product = await _productService.UpdateAsync(id, dto);
         if (product == null)
         {
-            return NotFound();
+            return NotFound("Product not Found");
         }
         
         return Ok(product);
@@ -72,10 +77,11 @@ public class ProductsController : ControllerBase
         var deleted = await _productService.DeleteAsync(id);
         if (!deleted)
         {
-            return NotFound();
+            return NotFound("Product not found");
         }
         
         return NoContent();
+        _logger.LogInformation("Product deleted : {ProductName}", id);
     }
 
 }

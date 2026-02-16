@@ -53,31 +53,43 @@ public class ProductService : IProductService
     public async Task<IEnumerable<ProductResponseDto>> GetAllAsync(
         int page,
         int pageSize,
-        int? categoryId)
+        int? categoryId,
+        string? sortBy)
     {
         var query = _context.Products.AsQueryable();
 
         if (categoryId.HasValue)
         {
-            query = query.Where(x => x.CategoryId == categoryId.Value);
+            query = query.Where(x => x.Id == categoryId.Value);
         }
+
+        query = sortBy?.ToLower() switch
+        {
+            "price" => query.OrderBy(p => p.Price),
+            "name" => query.OrderBy(p => p.Name),
+            "newest" => query.OrderByDescending(p => p.CreatedAt),
+            _ => query.OrderByDescending(p => p.CreatedAt)
+        };
         
-        var skip = (page - 1) *  pageSize;
-        
+        var skip = (page -1 ) * pageSize;
         return await query
             .Skip(skip)
             .Take(pageSize)
-            .Select(p => new ProductResponseDto
+            .Select(p => new ProductResponseDto()
             {
                 Id = p.Id,
                 Name = p.Name,
-                Price= p.Price, 
+                Price = p.Price,
                 Quantity = p.Quantity,
                 CategoryId = p.CategoryId,
                 CategoryName = p.Category.Name,
                 CreatedAt = p.CreatedAt
+
+
             })
             .ToListAsync();
+
+        
     }
 
     public async Task<ProductResponseDto?> GetByIdAsync(int id)

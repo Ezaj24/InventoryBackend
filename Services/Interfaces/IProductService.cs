@@ -10,7 +10,8 @@ public interface IProductService
     Task<IEnumerable<ProductResponseDto>> GetAllAsync(
         int page,
         int pageSize,
-        int? categoryId);
+        int? categoryId,
+        string? sortBy);
     
     
     Task<ProductResponseDto?> GetByIdAsync(int id);
