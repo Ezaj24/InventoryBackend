@@ -54,15 +54,24 @@ public class ProductService : IProductService
         int page,
         int pageSize,
         int? categoryId,
-        string? sortBy)
+        string? sortBy,
+        string? search)
     {
         var query = _context.Products.AsQueryable();
 
+        // filter by category
         if (categoryId.HasValue)
         {
-            query = query.Where(x => x.Id == categoryId.Value);
+            query = query.Where(p => p.CategoryId == categoryId.Value);
         }
 
+        // search by name
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            query = query.Where(p => p.Name.ToLower().Contains(search.ToLower()));
+        }
+
+        // sorting
         query = sortBy?.ToLower() switch
         {
             "price" => query.OrderBy(p => p.Price),
@@ -70,12 +79,14 @@ public class ProductService : IProductService
             "newest" => query.OrderByDescending(p => p.CreatedAt),
             _ => query.OrderByDescending(p => p.CreatedAt)
         };
-        
-        var skip = (page -1 ) * pageSize;
+
+        // pagination
+        var skip = (page - 1) * pageSize;
+
         return await query
             .Skip(skip)
             .Take(pageSize)
-            .Select(p => new ProductResponseDto()
+            .Select(p => new ProductResponseDto
             {
                 Id = p.Id,
                 Name = p.Name,
@@ -84,13 +95,10 @@ public class ProductService : IProductService
                 CategoryId = p.CategoryId,
                 CategoryName = p.Category.Name,
                 CreatedAt = p.CreatedAt
-
-
             })
             .ToListAsync();
-
-        
     }
+    
 
     public async Task<ProductResponseDto?> GetByIdAsync(int id)
     {

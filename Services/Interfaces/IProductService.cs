@@ -11,7 +11,8 @@ public interface IProductService
         int page,
         int pageSize,
         int? categoryId,
-        string? sortBy);
+        string? sortBy,
+        string? search);
     
     
     Task<ProductResponseDto?> GetByIdAsync(int id);

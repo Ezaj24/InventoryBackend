@@ -24,9 +24,10 @@ public class ProductsController : ControllerBase
          int page = 1,
          int pageSize = 5,
          int? categoryId = null,
-         string? sortBy = null)
+         string? sortBy = null,
+         string? search = null)
     {
-         return Ok(await _productService.GetAllAsync(page, pageSize, categoryId, sortBy));
+         return Ok(await _productService.GetAllAsync(page, pageSize, categoryId, sortBy,search));
        
     }
 
