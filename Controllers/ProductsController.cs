@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using InventoryCore.Api.Services.Interfaces;
 using InventoryCore.Api.Dtos.Products;
 using Microsoft.Extensions.Logging;
-
+using InventoryCore.Api.Dtos.Common;
 namespace InventoryCore.Api.Controllers;
 
 
@@ -20,7 +20,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<ProductResponseDto>>> GetAll(
+    public async Task<ActionResult<PagedResult<ProductResponseDto>>> GetAll(
          int page = 1,
          int pageSize = 5,
          int? categoryId = null,

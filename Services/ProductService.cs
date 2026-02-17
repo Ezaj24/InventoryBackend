@@ -4,7 +4,8 @@ using InventoryCore.Api.Services.Interfaces;
 using InventoryCore.Api.Dtos.Products;
 using InventoryCore.Api.Models;
 using Microsoft.EntityFrameworkCore;
-
+using InventoryCore.Api.Dtos.Common;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace InventoryCore.Api.Services;
 
@@ -50,7 +51,7 @@ public class ProductService : IProductService
         
     }
 
-    public async Task<IEnumerable<ProductResponseDto>> GetAllAsync(
+    public async Task<PagedResult<ProductResponseDto>> GetAllAsync(
         int page,
         int pageSize,
         int? categoryId,
@@ -81,9 +82,12 @@ public class ProductService : IProductService
         };
 
         // pagination
+       
+        var totalCount = await query.CountAsync();
+        
         var skip = (page - 1) * pageSize;
-
-        return await query
+        
+        var items = await query
             .Skip(skip)
             .Take(pageSize)
             .Select(p => new ProductResponseDto
@@ -97,6 +101,14 @@ public class ProductService : IProductService
                 CreatedAt = p.CreatedAt
             })
             .ToListAsync();
+        
+        return new PagedResult<ProductResponseDto>
+        {
+            Items = items,
+            TotalCount = totalCount
+        };
+    
+        
     }
     
 
