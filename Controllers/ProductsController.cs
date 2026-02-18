@@ -3,11 +3,13 @@ using InventoryCore.Api.Services.Interfaces;
 using InventoryCore.Api.Dtos.Products;
 using Microsoft.Extensions.Logging;
 using InventoryCore.Api.Dtos.Common;
+using Microsoft.AspNetCore.Authorization;
 namespace InventoryCore.Api.Controllers;
 
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class ProductsController : ControllerBase
 {
     private readonly IProductService _productService;

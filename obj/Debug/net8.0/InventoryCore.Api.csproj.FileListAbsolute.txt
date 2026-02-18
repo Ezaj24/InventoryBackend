@@ -104,3 +104,11 @@ C:\Projects\InventoryCore\InventoryCore.Api\obj\Debug\net8.0\refint\InventoryCor
 C:\Projects\InventoryCore\InventoryCore.Api\obj\Debug\net8.0\InventoryCore.Api.pdb
 C:\Projects\InventoryCore\InventoryCore.Api\obj\Debug\net8.0\InventoryCore.Api.genruntimeconfig.cache
 C:\Projects\InventoryCore\InventoryCore.Api\obj\Debug\net8.0\ref\InventoryCore.Api.dll
+C:\Projects\InventoryCore\InventoryCore.Api\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Projects\InventoryCore\InventoryCore.Api\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Projects\InventoryCore\InventoryCore.Api\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Projects\InventoryCore\InventoryCore.Api\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
+C:\Projects\InventoryCore\InventoryCore.Api\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.dll
+C:\Projects\InventoryCore\InventoryCore.Api\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Projects\InventoryCore\InventoryCore.Api\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
+C:\Projects\InventoryCore\InventoryCore.Api\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
