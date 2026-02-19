@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using InventoryCore.Api.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using InventoryCore.Api.Data.Seed;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -75,6 +76,12 @@ builder.Services.AddScoped<IProductService,ProductService>();
 builder.Services.AddScoped<IAuthService , AuthService>();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    await DbSeeder.SeedAdminAsync(db);
+}
 
 if (app.Environment.IsDevelopment())
 {

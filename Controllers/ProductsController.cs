@@ -9,7 +9,7 @@ namespace InventoryCore.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
+[Authorize(Roles = "Admin")]
 public class ProductsController : ControllerBase
 {
     private readonly IProductService _productService;
@@ -21,6 +21,7 @@ public class ProductsController : ControllerBase
         _logger = logger;
     }
 
+    [AllowAnonymous]
     [HttpGet]
     public async Task<ActionResult<PagedResult<ProductResponseDto>>> GetAll(
          int page = 1,
