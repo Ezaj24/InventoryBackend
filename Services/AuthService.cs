@@ -52,6 +52,7 @@ public class AuthService : IAuthService
     public async Task<string?> LoginAsync(LoginDto dto)
     {
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
+        Console.WriteLine($"ROLE FROM DB: {user.Role}");
 
         if (user == null)
         {

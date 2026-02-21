@@ -84,10 +84,13 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    await DbSeeder.SeedAdminAsync(db);
+
+    db.Database.Migrate(); 
+    
+   // await DbSeeder.SeedAdminAsync(db);
 }
 
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())    
 {
     app.UseSwagger();
     app.UseSwaggerUI();
