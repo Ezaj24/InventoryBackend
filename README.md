@@ -94,13 +94,3 @@ Ezaj Shaikh
 
 
 ---
-
-# ✅ After adding README
-
-Run:
-
-``bash
-
-git add README.md
-git commit -m "Add project README"
-git push
