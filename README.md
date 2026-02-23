@@ -90,7 +90,7 @@ CI/CD pipeline setup
 
 👨‍💻 Author
 
-Ezaj Shaikh
+Ezaj Shaikh.
 
 
 ---
