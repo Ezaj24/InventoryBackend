@@ -58,9 +58,9 @@ public class ProductsController : ControllerBase
             return BadRequest("Invalid Category");
         }
 
+        
+        _logger.LogInformation("Product created : {ProductName}", result.Name); 
         return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
-        _logger.LogInformation("Product created : {ProductName}", result.Name);
-
     }
 
     [HttpPut("{id}")]
@@ -84,8 +84,9 @@ public class ProductsController : ControllerBase
             return NotFound("Product not found");
         }
         
-        return NoContent();
         _logger.LogInformation("Product deleted : {ProductName}", id);
+        return NoContent();
+        
     }
 
 }
