@@ -84,7 +84,7 @@ Integration testing
 
 Caching for performance
 
-Cloud deployment (Azure)
+Cloud deployment 
 
 CI/CD pipeline setup
 
